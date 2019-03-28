@@ -1,0 +1,44 @@
+
+spring:
+  profiles:
+    active: dev
+---
+server:
+  port: 9527
+spring:
+  application:
+    name: MICROSERVICE-ZUUL-GATEWAY
+  profiles: dev
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+      instance-id: zuul-9527 #显示的名字而已
+      prefer-ip-address: true  #注册中心左下角现实ip
+zuul:
+  routes:
+    plat.serviceId: aigou-plat  #和服务提供者的服务名一樣
+    plat.path: /wg/**   #访问的时候，是/wg打开头的地址，就使用aigou-plat来响应 做映射：解决地址太长了，服务名的暴露的问题
+  ignored-services: "*"   #不能直接使用服务名访问了:如果有很多，可以直接使用*忽略所有
+  prefix: "/aigou"  # 前缀   http://localhost:9527/aigou/wg/user/testuser
+---
+server:
+  port: 9528
+spring:
+  application:
+    name: MICROSERVICE-ZUUL-GATEWAY-TEST
+  profiles: test
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+      instance-id: zuul-9528 #显示的名字而已
+      prefer-ip-address: true  #注册中心左下角现实ip
+zuul:
+  routes:
+    plat.serviceId: aigou-plat  #和服务提供者的服务名一樣
+    plat.path: /wg/**   #访问的时候，是/wg打开头的地址，就使用aigou-plat来响应 做映射：解决地址太长了，服务名的暴露的问题
+  ignored-services: "*"   #不能直接使用服务名访问了:如果有很多，可以直接使用*忽略所有
+  prefix: "/aigou"  # 前缀   http://localhost:9527/aigou/wg/user/testuser
